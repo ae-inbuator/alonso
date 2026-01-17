@@ -1,11 +1,12 @@
 /**
- * PredictionBar - Barra que muestra las predicciones de palabras
+ * PredictionBar - Barra que muestra las predicciones de palabras y frases IA
  * 
  * Props:
- * - predictions: Array<string> - Lista de palabras sugeridas
- * - onSelect: function(word) - Handler al seleccionar una predicción
+ * - predictions: Array<string> - Lista de palabras sugeridas (locales)
+ * - onSelect: function(word) - Handler al seleccionar una predicción local
  * - loading: boolean - Si está cargando predicciones de IA
- * - aiPredictions: Array<string> - Predicciones de IA (opcional)
+ * - aiPredictions: Array<{full, addition}> - Predicciones de IA (continuaciones)
+ * - onAISelect: function(fullText) - Handler al seleccionar una predicción de IA
  */
 
 import PredictionChip from './PredictionChip'
@@ -15,35 +16,15 @@ export default function PredictionBar({
   predictions = [], 
   onSelect,
   loading = false,
-  aiPredictions = []
+  aiPredictions = [],
+  onAISelect
 }) {
   
   const hasPredictions = predictions.length > 0 || aiPredictions.length > 0
   
-  // Si está cargando IA
-  if (loading) {
-    return (
-      <div className={styles.bar}>
-        <div className={styles.loading}>
-          <div className={styles.spinner} />
-          <span>Pensando...</span>
-        </div>
-      </div>
-    )
-  }
-  
-  // Si no hay predicciones
-  if (!hasPredictions) {
-    return (
-      <div className={styles.bar}>
-        <span className={styles.empty}>Escribe para ver sugerencias...</span>
-      </div>
-    )
-  }
-  
   return (
     <div className={styles.bar}>
-      {/* Predicciones locales */}
+      {/* Predicciones locales (palabras) */}
       {predictions.map((word, index) => (
         <PredictionChip
           key={`local-${index}-${word}`}
@@ -52,15 +33,35 @@ export default function PredictionBar({
         />
       ))}
       
-      {/* Predicciones de IA (futuro) */}
-      {aiPredictions.map((word, index) => (
+      {/* Separador si hay ambos tipos */}
+      {predictions.length > 0 && (aiPredictions.length > 0 || loading) && (
+        <div className={styles.separator}>|</div>
+      )}
+      
+      {/* Indicador de carga de IA */}
+      {loading && (
+        <div className={styles.loading}>
+          <div className={styles.spinner} />
+          <span>🤖</span>
+        </div>
+      )}
+      
+      {/* Predicciones de IA (continuaciones) */}
+      {!loading && aiPredictions.map((suggestion, index) => (
         <PredictionChip
-          key={`ai-${index}-${word}`}
-          word={word}
-          onClick={onSelect}
+          key={`ai-${index}-${suggestion.addition}`}
+          word={suggestion.addition}
+          onClick={() => onAISelect && onAISelect(suggestion.full)}
           isAI={true}
+          addition={suggestion.addition}
+          fullText={suggestion.full}
         />
       ))}
+      
+      {/* Estado vacío (solo si no hay nada) */}
+      {!hasPredictions && !loading && (
+        <span className={styles.empty}>Escribe para ver sugerencias...</span>
+      )}
     </div>
   )
 }

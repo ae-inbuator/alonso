@@ -1,227 +1,259 @@
 /**
- * Diccionario de palabras comunes en español (México)
- * Ordenadas por frecuencia de uso aproximada
+ * Diccionario de palabras en español ordenado por FRECUENCIA DE USO
+ * OPTIMIZADO PARA AAC (Comunicación Aumentativa y Alternativa)
  * 
- * Categorías incluidas:
- * - Pronombres y artículos
- * - Verbos comunes (conjugaciones básicas)
- * - Sustantivos cotidianos
- * - Adjetivos frecuentes
- * - Adverbios y conectores
- * - Palabras de cortesía
- * - Números escritos
+ * Las palabras de comunicación cotidiana tienen prioridad sobre
+ * palabras técnicas o formales.
  */
 
-const spanishWords = [
-  // === PRONOMBRES Y ARTÍCULOS ===
-  'yo', 'tu', 'tú', 'el', 'él', 'ella', 'nosotros', 'ustedes', 'ellos', 'ellas',
-  'mi', 'mis', 'me', 'te', 'se', 'nos', 'les', 'lo', 'la', 'los', 'las',
-  'un', 'una', 'uno', 'unos', 'unas', 'este', 'esta', 'esto', 'estos', 'estas',
-  'ese', 'esa', 'eso', 'esos', 'esas', 'aquel', 'aquella', 'aquello',
-  'que', 'quien', 'cual', 'cuyo', 'donde', 'cuando', 'como', 'cuanto',
+// Palabras ordenadas por frecuencia Y utilidad para AAC
+// El índice representa la prioridad (menor índice = más frecuente/útil)
+const wordsByFrequency = [
+  // === TOP PRIORITY - Palabras AAC esenciales ===
+  // Saludos - lo más importante para iniciar comunicación
+  'hola', 'adiós', 'buenos', 'buenas', 'días', 'tardes', 'noches', 'gracias', 'favor', 'perdón',
   
-  // === VERBOS SER/ESTAR ===
-  'soy', 'eres', 'es', 'somos', 'son', 'era', 'fue', 'sido', 'siendo',
-  'estoy', 'estas', 'estás', 'esta', 'está', 'estamos', 'estan', 'están',
-  'estaba', 'estuvo', 'estado', 'estando',
+  // Respuestas básicas
+  'sí', 'no', 'bien', 'mal', 'más', 'menos', 'ya', 'ahora', 'después', 'antes',
   
-  // === VERBOS TENER/HABER ===
-  'tengo', 'tienes', 'tiene', 'tenemos', 'tienen', 'tenia', 'tenía', 'tuvo', 'tenido',
-  'he', 'has', 'ha', 'hay', 'hemos', 'han', 'habia', 'había', 'hubo', 'habido',
+  // Necesidades inmediatas
+  'quiero', 'necesito', 'puedo', 'tengo', 'estoy', 'me', 'ayuda', 'baño', 'agua', 'hambre',
+  'sed', 'dolor', 'frío', 'calor', 'cansado', 'cansada', 'enfermo', 'enferma', 'sueño', 'listo',
   
-  // === VERBOS IR/VENIR ===
-  'voy', 'vas', 'va', 'vamos', 'van', 'iba', 'fue', 'ido', 'yendo',
-  'vengo', 'vienes', 'viene', 'venimos', 'vienen', 'venia', 'venía', 'vino', 'venido',
+  // Preguntas comunes
+  'qué', 'cómo', 'cuándo', 'dónde', 'quién', 'cuánto', 'por', 'qué', 'cuál', 'para',
   
-  // === VERBOS QUERER/PODER/DEBER ===
-  'quiero', 'quieres', 'quiere', 'queremos', 'quieren', 'queria', 'quería', 'quiso',
-  'puedo', 'puedes', 'puede', 'podemos', 'pueden', 'podia', 'podía', 'pudo',
-  'debo', 'debes', 'debe', 'debemos', 'deben', 'debia', 'debía',
+  // Pronombres esenciales
+  'yo', 'tú', 'él', 'ella', 'nosotros', 'ellos', 'mi', 'tu', 'su', 'me',
+  'te', 'le', 'nos', 'les', 'lo', 'la', 'los', 'las', 'esto', 'eso',
   
-  // === VERBOS HACER/DECIR ===
-  'hago', 'haces', 'hace', 'hacemos', 'hacen', 'hacia', 'hacía', 'hizo', 'hecho',
-  'digo', 'dices', 'dice', 'decimos', 'dicen', 'decia', 'decía', 'dijo', 'dicho',
+  // Verbos de comunicación
+  'decir', 'hablar', 'preguntar', 'responder', 'repetir', 'entender', 'saber', 'conocer', 'pensar', 'creer',
+  'gustar', 'encantar', 'preferir', 'querer', 'poder', 'deber', 'tener', 'ser', 'estar', 'ir',
+  'venir', 'llegar', 'salir', 'entrar', 'esperar', 'buscar', 'encontrar', 'ver', 'mirar', 'oír',
+  'escuchar', 'sentir', 'tocar', 'comer', 'beber', 'dormir', 'despertar', 'descansar', 'trabajar', 'estudiar',
   
-  // === VERBOS SABER/CONOCER ===
-  'se', 'sé', 'sabes', 'sabe', 'sabemos', 'saben', 'sabia', 'sabía', 'supo', 'sabido',
-  'conozco', 'conoces', 'conoce', 'conocemos', 'conocen', 'conocia', 'conocía',
+  // Lugares comunes
+  'casa', 'escuela', 'trabajo', 'baño', 'cuarto', 'cocina', 'sala', 'calle', 'tienda', 'restaurante',
+  'hospital', 'doctor', 'aquí', 'allí', 'allá', 'cerca', 'lejos', 'arriba', 'abajo', 'dentro',
   
-  // === VERBOS VER/OÍR/SENTIR ===
-  'veo', 'ves', 've', 'vemos', 'ven', 'veia', 'veía', 'vio', 'visto',
-  'oigo', 'oyes', 'oye', 'oimos', 'oímos', 'oyen', 'oia', 'oía', 'oyo', 'oyó',
-  'siento', 'sientes', 'siente', 'sentimos', 'sienten', 'sintio', 'sintió',
+  // Personas
+  'mamá', 'papá', 'hermano', 'hermana', 'amigo', 'amiga', 'familia', 'maestro', 'maestra', 'doctor',
+  'doctora', 'señor', 'señora', 'niño', 'niña', 'persona', 'gente', 'todos', 'nadie', 'alguien',
   
-  // === VERBOS COMUNES ===
-  'como', 'comes', 'come', 'comemos', 'comen', 'comido',
-  'bebo', 'bebes', 'bebe', 'bebemos', 'beben', 'bebido',
-  'duermo', 'duermes', 'duerme', 'dormimos', 'duermen', 'dormido',
-  'trabajo', 'trabajas', 'trabaja', 'trabajamos', 'trabajan',
-  'estudio', 'estudias', 'estudia', 'estudiamos', 'estudian',
-  'juego', 'juegas', 'juega', 'jugamos', 'juegan',
-  'leo', 'lees', 'lee', 'leemos', 'leen', 'leido', 'leído',
-  'escribo', 'escribes', 'escribe', 'escribimos', 'escriben',
-  'hablo', 'hablas', 'habla', 'hablamos', 'hablan',
-  'escucho', 'escuchas', 'escucha', 'escuchamos', 'escuchan',
-  'miro', 'miras', 'mira', 'miramos', 'miran',
-  'camino', 'caminas', 'camina', 'caminamos', 'caminan',
-  'corro', 'corres', 'corre', 'corremos', 'corren',
-  'llego', 'llegas', 'llega', 'llegamos', 'llegan',
-  'salgo', 'sales', 'sale', 'salimos', 'salen',
-  'entro', 'entras', 'entra', 'entramos', 'entran',
-  'abro', 'abres', 'abre', 'abrimos', 'abren',
-  'cierro', 'cierras', 'cierra', 'cerramos', 'cierran',
-  'pongo', 'pones', 'pone', 'ponemos', 'ponen',
-  'tomo', 'tomas', 'toma', 'tomamos', 'toman',
-  'doy', 'das', 'da', 'damos', 'dan',
-  'llamo', 'llamas', 'llama', 'llamamos', 'llaman',
-  'paso', 'pasas', 'pasa', 'pasamos', 'pasan',
-  'espero', 'esperas', 'espera', 'esperamos', 'esperan',
-  'ayudo', 'ayudas', 'ayuda', 'ayudamos', 'ayudan',
-  'necesito', 'necesitas', 'necesita', 'necesitamos', 'necesitan',
-  'busco', 'buscas', 'busca', 'buscamos', 'buscan',
-  'encuentro', 'encuentras', 'encuentra', 'encontramos', 'encuentran',
-  'uso', 'usas', 'usa', 'usamos', 'usan',
-  'pienso', 'piensas', 'piensa', 'pensamos', 'piensan',
-  'creo', 'crees', 'cree', 'creemos', 'creen',
-  'entiendo', 'entiendes', 'entiende', 'entendemos', 'entienden',
-  'recuerdo', 'recuerdas', 'recuerda', 'recordamos', 'recuerdan',
-  'olvido', 'olvidas', 'olvida', 'olvidamos', 'olvidan',
-  'gusto', 'gustas', 'gusta', 'gustamos', 'gustan',
-  'encanto', 'encantas', 'encanta', 'encantamos', 'encantan',
-  'prefiero', 'prefieres', 'prefiere', 'preferimos', 'prefieren',
+  // Tiempo
+  'hoy', 'ayer', 'mañana', 'ahora', 'luego', 'después', 'antes', 'siempre', 'nunca', 'todavía',
+  'hora', 'minuto', 'día', 'semana', 'mes', 'año', 'tiempo', 'momento', 'rato', 'tarde',
   
-  // === PALABRAS DE CORTESÍA ===
-  'hola', 'adios', 'adiós', 'buenos', 'buenas', 'dias', 'días', 'tardes', 'noches',
-  'gracias', 'muchas', 'por', 'favor', 'perdon', 'perdón', 'disculpa', 'disculpe',
-  'permiso', 'con', 'de', 'nada', 'bienvenido', 'bienvenida',
+  // Emociones
+  'feliz', 'triste', 'enojado', 'enojada', 'contento', 'contenta', 'preocupado', 'nervioso', 'tranquilo', 'emocionado',
+  'aburrido', 'cansado', 'frustrado', 'confundido', 'asustado', 'sorprendido', 'alegre', 'molesto', 'ansioso', 'orgulloso',
   
-  // === PREGUNTAS ===
-  'que', 'qué', 'quien', 'quién', 'cual', 'cuál', 'donde', 'dónde',
-  'cuando', 'cuándo', 'como', 'cómo', 'cuanto', 'cuánto', 'cuanta', 'cuánta',
-  'por', 'porque', 'porqué', 'para',
+  // Adjetivos básicos
+  'bueno', 'buena', 'malo', 'mala', 'grande', 'pequeño', 'mucho', 'poco', 'todo', 'nada',
+  'otro', 'otra', 'mismo', 'nuevo', 'viejo', 'fácil', 'difícil', 'importante', 'mejor', 'peor',
   
-  // === RESPUESTAS ===
-  'si', 'sí', 'no', 'tal', 'vez', 'quiza', 'quizá', 'quizas', 'quizás',
-  'claro', 'obvio', 'seguro', 'cierto', 'verdad', 'falso',
-  'bien', 'mal', 'mas', 'más', 'menos', 'mucho', 'poco', 'muy', 'tan', 'tanto',
+  // === SECONDARY - Artículos y conectores frecuentes ===
+  'de', 'la', 'el', 'en', 'y', 'a', 'los', 'las', 'un', 'una',
+  'del', 'al', 'con', 'sin', 'pero', 'porque', 'que', 'como', 'cuando', 'donde',
+  'si', 'también', 'entonces', 'así', 'muy', 'tan', 'más', 'menos', 'solo', 'casi',
   
-  // === TIEMPO ===
-  'hoy', 'ayer', 'mañana', 'ahora', 'luego', 'despues', 'después', 'antes',
-  'siempre', 'nunca', 'ya', 'todavia', 'todavía', 'aun', 'aún',
-  'temprano', 'tarde', 'pronto', 'lento', 'rapido', 'rápido',
-  'hora', 'horas', 'minuto', 'minutos', 'segundo', 'segundos',
-  'dia', 'día', 'dias', 'días', 'semana', 'semanas', 'mes', 'meses', 'año', 'años',
-  'lunes', 'martes', 'miercoles', 'miércoles', 'jueves', 'viernes', 'sabado', 'sábado', 'domingo',
-  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
-  
-  // === LUGARES ===
-  'aqui', 'aquí', 'alli', 'allí', 'alla', 'allá', 'aca', 'acá',
-  'cerca', 'lejos', 'arriba', 'abajo', 'adelante', 'atras', 'atrás',
-  'dentro', 'fuera', 'adentro', 'afuera', 'izquierda', 'derecha', 'centro',
-  'casa', 'escuela', 'trabajo', 'tienda', 'hospital', 'parque',
-  'restaurante', 'cine', 'banco', 'iglesia', 'oficina', 'biblioteca',
-  'baño', 'cocina', 'sala', 'cuarto', 'habitacion', 'habitación',
-  'calle', 'ciudad', 'pueblo', 'pais', 'país', 'mundo',
-  
-  // === FAMILIA ===
-  'familia', 'papa', 'papá', 'mama', 'mamá', 'padre', 'madre', 'padres',
-  'hijo', 'hija', 'hijos', 'hermano', 'hermana', 'hermanos',
-  'abuelo', 'abuela', 'abuelos', 'nieto', 'nieta', 'nietos',
-  'tio', 'tío', 'tia', 'tía', 'tios', 'tíos', 'primo', 'prima', 'primos',
-  'esposo', 'esposa', 'novio', 'novia', 'amigo', 'amiga', 'amigos',
-  
-  // === PERSONAS ===
-  'persona', 'personas', 'gente', 'hombre', 'mujer', 'niño', 'niña',
-  'joven', 'adulto', 'señor', 'señora', 'doctor', 'doctora',
-  'maestro', 'maestra', 'profesor', 'profesora', 'estudiante',
-  
-  // === CUERPO ===
-  'cabeza', 'cara', 'ojos', 'nariz', 'boca', 'oreja', 'orejas',
-  'mano', 'manos', 'dedo', 'dedos', 'brazo', 'brazos',
-  'pierna', 'piernas', 'pie', 'pies', 'espalda', 'pecho',
+  // === CONJUGACIONES COMUNES ===
+  // Ser
+  'soy', 'eres', 'es', 'somos', 'son', 'era', 'fue', 'sido',
+  // Estar  
+  'estoy', 'estás', 'está', 'estamos', 'están', 'estaba', 'estuvo', 'estado',
+  // Tener
+  'tengo', 'tienes', 'tiene', 'tenemos', 'tienen', 'tenía', 'tuvo', 'tenido',
+  // Hacer
+  'hago', 'haces', 'hace', 'hacemos', 'hacen', 'hacía', 'hizo', 'hecho',
+  // Poder
+  'puedo', 'puedes', 'puede', 'podemos', 'pueden', 'podía', 'pudo', 'podido',
+  // Ir
+  'voy', 'vas', 'va', 'vamos', 'van', 'iba', 'fue', 'ido',
+  // Querer
+  'quiero', 'quieres', 'quiere', 'queremos', 'quieren', 'quería', 'quiso', 'querido',
+  // Decir
+  'digo', 'dices', 'dice', 'decimos', 'dicen', 'decía', 'dijo', 'dicho',
+  // Saber
+  'sé', 'sabes', 'sabe', 'sabemos', 'saben', 'sabía', 'supo', 'sabido',
+  // Ver
+  'veo', 'ves', 've', 'vemos', 'ven', 'veía', 'vio', 'visto',
+  // Dar
+  'doy', 'das', 'da', 'damos', 'dan', 'daba', 'dio', 'dado',
+  // Venir
+  'vengo', 'vienes', 'viene', 'venimos', 'vienen', 'venía', 'vino', 'venido',
+  // Llegar
+  'llego', 'llegas', 'llega', 'llegamos', 'llegan', 'llegaba', 'llegó', 'llegado',
+  // Pasar
+  'paso', 'pasas', 'pasa', 'pasamos', 'pasan', 'pasaba', 'pasó', 'pasado',
+  // Poner
+  'pongo', 'pones', 'pone', 'ponemos', 'ponen', 'ponía', 'puso', 'puesto',
+  // Salir
+  'salgo', 'sales', 'sale', 'salimos', 'salen', 'salía', 'salió', 'salido',
+  // Seguir
+  'sigo', 'sigues', 'sigue', 'seguimos', 'siguen', 'seguía', 'siguió', 'seguido',
+  // Creer
+  'creo', 'crees', 'cree', 'creemos', 'creen', 'creía', 'creyó', 'creído',
+  // Hablar
+  'hablo', 'hablas', 'habla', 'hablamos', 'hablan', 'hablaba', 'habló', 'hablado',
+  // Llevar
+  'llevo', 'llevas', 'lleva', 'llevamos', 'llevan', 'llevaba', 'llevó', 'llevado',
+  // Comer
+  'como', 'comes', 'come', 'comemos', 'comen', 'comía', 'comió', 'comido',
+  // Dormir
+  'duermo', 'duermes', 'duerme', 'dormimos', 'duermen', 'dormía', 'durmió', 'dormido',
+  // Sentir
+  'siento', 'sientes', 'siente', 'sentimos', 'sienten', 'sentía', 'sintió', 'sentido',
+  // Gustar
+  'gusta', 'gustan', 'gustaba', 'gustó', 'gustado',
+  // Parecer
+  'parece', 'parecen', 'parecía', 'pareció', 'parecido',
+  // Encontrar
+  'encuentro', 'encuentras', 'encuentra', 'encontramos', 'encuentran', 'encontraba', 'encontró',
+  // Pensar
+  'pienso', 'piensas', 'piensa', 'pensamos', 'piensan', 'pensaba', 'pensó', 'pensado',
+  // Esperar
+  'espero', 'esperas', 'espera', 'esperamos', 'esperan', 'esperaba', 'esperó', 'esperado',
+  // Buscar
+  'busco', 'buscas', 'busca', 'buscamos', 'buscan', 'buscaba', 'buscó', 'buscado',
+  // Llamar
+  'llamo', 'llamas', 'llama', 'llamamos', 'llaman', 'llamaba', 'llamó', 'llamado',
+  // Necesitar
+  'necesito', 'necesitas', 'necesita', 'necesitamos', 'necesitan', 'necesitaba', 'necesitó',
+  // Ayudar
+  'ayudo', 'ayudas', 'ayuda', 'ayudamos', 'ayudan', 'ayudaba', 'ayudó', 'ayudado',
   
   // === COMIDA Y BEBIDA ===
-  'comida', 'desayuno', 'almuerzo', 'cena', 'agua', 'leche', 'jugo', 'cafe', 'café',
-  'pan', 'arroz', 'frijoles', 'carne', 'pollo', 'pescado', 'huevo', 'huevos',
-  'fruta', 'manzana', 'platano', 'plátano', 'naranja', 'verdura', 'ensalada',
-  'sopa', 'tacos', 'torta', 'pastel', 'galleta', 'dulce', 'helado',
-  
-  // === ESTADOS Y EMOCIONES ===
-  'feliz', 'triste', 'enojado', 'enojada', 'cansado', 'cansada',
-  'contento', 'contenta', 'preocupado', 'preocupada', 'nervioso', 'nerviosa',
-  'tranquilo', 'tranquila', 'emocionado', 'emocionada', 'aburrido', 'aburrida',
-  'enfermo', 'enferma', 'sano', 'sana', 'bien', 'mal', 'mejor', 'peor',
-  'hambre', 'sed', 'sueño', 'frio', 'frío', 'calor', 'dolor',
-  
-  // === ADJETIVOS COMUNES ===
-  'grande', 'pequeño', 'pequeña', 'alto', 'alta', 'bajo', 'baja',
-  'largo', 'larga', 'corto', 'corta', 'ancho', 'angosto',
-  'nuevo', 'nueva', 'viejo', 'vieja', 'joven', 'antiguo', 'moderna',
-  'bueno', 'buena', 'malo', 'mala', 'mejor', 'peor',
-  'bonito', 'bonita', 'feo', 'fea', 'lindo', 'linda',
-  'facil', 'fácil', 'dificil', 'difícil', 'simple', 'complicado',
-  'importante', 'necesario', 'posible', 'imposible',
-  'primero', 'primera', 'segundo', 'segunda', 'ultimo', 'última', 'siguiente',
-  'mismo', 'misma', 'otro', 'otra', 'otros', 'otras',
-  'todo', 'toda', 'todos', 'todas', 'cada', 'algunos', 'algunas',
-  
-  // === COLORES ===
-  'color', 'colores', 'rojo', 'roja', 'azul', 'verde', 'amarillo', 'amarilla',
-  'naranja', 'morado', 'morada', 'rosa', 'negro', 'negra', 'blanco', 'blanca',
-  'gris', 'cafe', 'café', 'dorado', 'plateado',
-  
-  // === NÚMEROS ===
-  'cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez',
-  'once', 'doce', 'trece', 'catorce', 'quince', 'veinte', 'treinta', 'cuarenta', 'cincuenta',
-  'cien', 'ciento', 'mil', 'millon', 'millón', 'numero', 'número',
-  'primero', 'segundo', 'tercero', 'cuarto', 'quinto',
+  'comida', 'desayuno', 'almuerzo', 'cena', 'café', 'leche', 'jugo', 'agua', 'refresco', 'té',
+  'pan', 'arroz', 'frijoles', 'carne', 'pollo', 'pescado', 'huevo', 'queso', 'fruta', 'verdura',
+  'manzana', 'plátano', 'naranja', 'uva', 'fresa', 'ensalada', 'sopa', 'tacos', 'torta', 'sandwich',
+  'pastel', 'galleta', 'helado', 'chocolate', 'dulce', 'sal', 'azúcar', 'picante', 'rico', 'delicioso',
   
   // === OBJETOS COTIDIANOS ===
-  'cosa', 'cosas', 'objeto', 'telefono', 'teléfono', 'celular', 'computadora',
-  'libro', 'libros', 'cuaderno', 'lapiz', 'lápiz', 'pluma', 'papel',
-  'mesa', 'silla', 'cama', 'puerta', 'ventana', 'pared', 'piso', 'techo',
-  'ropa', 'camisa', 'pantalon', 'pantalón', 'zapatos', 'sombrero',
-  'bolsa', 'mochila', 'llave', 'llaves', 'dinero', 'cartera',
-  'carro', 'coche', 'auto', 'bicicleta', 'autobus', 'autobús', 'avion', 'avión',
+  'teléfono', 'celular', 'computadora', 'tableta', 'televisión', 'radio', 'libro', 'cuaderno', 'lápiz', 'pluma',
+  'mesa', 'silla', 'cama', 'puerta', 'ventana', 'pared', 'piso', 'techo', 'luz', 'lámpara',
+  'ropa', 'camisa', 'pantalón', 'zapatos', 'calcetines', 'chaqueta', 'suéter', 'gorra', 'lentes', 'reloj',
+  'bolsa', 'mochila', 'cartera', 'llave', 'dinero', 'tarjeta', 'carro', 'coche', 'bicicleta', 'autobús',
   
-  // === CONECTORES ===
-  'y', 'e', 'o', 'u', 'pero', 'sino', 'aunque', 'porque', 'pues',
-  'entonces', 'asi', 'así', 'tambien', 'también', 'tampoco', 'ademas', 'además',
-  'sin', 'embargo', 'mientras', 'durante', 'desde', 'hasta', 'entre',
-  'sobre', 'bajo', 'hacia', 'contra', 'segun', 'según',
+  // === COLORES ===
+  'rojo', 'azul', 'verde', 'amarillo', 'naranja', 'morado', 'rosa', 'negro', 'blanco', 'gris',
+  'café', 'dorado', 'plateado', 'claro', 'oscuro',
   
-  // === PREPOSICIONES ===
-  'a', 'ante', 'bajo', 'con', 'contra', 'de', 'desde', 'en', 'entre',
-  'hacia', 'hasta', 'para', 'por', 'segun', 'según', 'sin', 'sobre', 'tras',
+  // === NÚMEROS ===
+  'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez',
+  'once', 'doce', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'cien', 'mil', 'primero', 'segundo',
   
-  // === EXPRESIONES ÚTILES AAC ===
-  'ayuda', 'necesito', 'quiero', 'puedo', 'tengo', 'estoy', 'siento', 'duele',
-  'repite', 'repita', 'espera', 'momento', 'listo', 'lista', 'entiendo', 'entendi', 'entendí',
-  'escribiendo', 'pensando', 'buscando'
+  // === DÍAS Y MESES ===
+  'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo',
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+  
+  // === FRASES CONTEXTO RESTAURANTE ===
+  'menú', 'carta', 'cuenta', 'propina', 'mesero', 'mesera', 'ordenar', 'pedir', 'recomendar', 'traer',
+  'plato', 'vaso', 'cuchara', 'tenedor', 'cuchillo', 'servilleta', 'sal', 'pimienta', 'salsa', 'limón',
+  
+  // === FRASES CONTEXTO ESCUELA ===
+  'clase', 'tarea', 'examen', 'pregunta', 'respuesta', 'profesor', 'profesora', 'compañero', 'compañera', 'recreo',
+  'pizarrón', 'escritorio', 'mochila', 'uniforme', 'calificación', 'nota', 'proyecto', 'presentación', 'lectura', 'matemáticas',
+  
+  // === MÁS VERBOS ÚTILES ===
+  'abrir', 'cerrar', 'encender', 'apagar', 'subir', 'bajar', 'empujar', 'jalar', 'agarrar', 'soltar',
+  'sentar', 'parar', 'levantar', 'acostar', 'vestir', 'desvestir', 'bañar', 'lavar', 'secar', 'peinar',
+  'correr', 'caminar', 'saltar', 'nadar', 'jugar', 'cantar', 'bailar', 'dibujar', 'pintar', 'escribir',
+  'leer', 'contar', 'sumar', 'restar', 'medir', 'pesar', 'cortar', 'pegar', 'doblar', 'romper',
+  'arreglar', 'limpiar', 'ordenar', 'guardar', 'sacar', 'meter', 'cargar', 'descargar', 'conectar', 'desconectar',
+  'empezar', 'terminar', 'continuar', 'parar', 'repetir', 'cambiar', 'probar', 'practicar', 'intentar', 'lograr',
+  'olvidar', 'recordar', 'aprender', 'enseñar', 'explicar', 'mostrar', 'demostrar', 'comparar', 'elegir', 'decidir',
+  'aceptar', 'rechazar', 'permitir', 'prohibir', 'invitar', 'visitar', 'llamar', 'contestar', 'mandar', 'recibir',
+  'regalar', 'prestar', 'devolver', 'compartir', 'repartir', 'juntar', 'separar', 'mezclar', 'dividir', 'multiplicar',
+  
+  // === EXPRESIONES ÚTILES ===
+  'claro', 'obvio', 'seguro', 'verdad', 'mentira', 'posible', 'imposible', 'fácil', 'difícil', 'normal',
+  'extraño', 'raro', 'diferente', 'igual', 'parecido', 'similar', 'contrario', 'opuesto', 'correcto', 'incorrecto',
+  'perfecto', 'excelente', 'genial', 'increíble', 'horrible', 'terrible', 'fantástico', 'maravilloso', 'interesante', 'aburrido',
+  'divertido', 'gracioso', 'serio', 'importante', 'urgente', 'necesario', 'suficiente', 'demasiado', 'bastante', 'apenas',
+  
+  // === PREPOSICIONES Y CONECTORES ===
+  'a', 'ante', 'bajo', 'con', 'contra', 'de', 'desde', 'durante', 'en', 'entre',
+  'hacia', 'hasta', 'mediante', 'para', 'por', 'según', 'sin', 'sobre', 'tras', 'versus',
+  'además', 'también', 'tampoco', 'incluso', 'excepto', 'salvo', 'menos', 'sino', 'aunque', 'mientras',
+  'apenas', 'enseguida', 'finalmente', 'primero', 'luego', 'después', 'entonces', 'así', 'pues', 'bueno',
+  
+  // === CUERPO ===
+  'cabeza', 'cara', 'ojo', 'ojos', 'nariz', 'boca', 'oreja', 'orejas', 'pelo', 'cabello',
+  'mano', 'manos', 'dedo', 'dedos', 'brazo', 'brazos', 'pierna', 'piernas', 'pie', 'pies',
+  'espalda', 'pecho', 'estómago', 'cuello', 'hombro', 'rodilla', 'tobillo', 'muñeca', 'codo', 'cadera',
+  
+  // === CLIMA Y NATURALEZA ===
+  'sol', 'luna', 'estrella', 'cielo', 'nube', 'lluvia', 'viento', 'nieve', 'calor', 'frío',
+  'árbol', 'flor', 'planta', 'jardín', 'parque', 'playa', 'mar', 'río', 'montaña', 'bosque',
+  
+  // === TECNOLOGÍA ===
+  'internet', 'wifi', 'mensaje', 'foto', 'video', 'música', 'juego', 'aplicación', 'app', 'batería',
+  'cargador', 'cable', 'pantalla', 'volumen', 'sonido', 'cámara', 'micrófono', 'audífono', 'bocina', 'control',
+  
+  // === PALABRAS AUXILIARES (baja prioridad) ===
+  'ha', 'he', 'has', 'han', 'hemos', 'había', 'hubo', 'haber', 'habido', 'habiendo',
+  'hay', 'habrá', 'habría', 'haya', 'hubiera', 'hubiese',
+  'aquel', 'aquella', 'aquello', 'aquellos', 'aquellas',
+  'cuyo', 'cuya', 'cuyos', 'cuyas', 'cual', 'cuales',
+  'ese', 'esa', 'esos', 'esas', 'este', 'esta', 'estos', 'estas',
+  'mío', 'mía', 'míos', 'mías', 'tuyo', 'tuya', 'tuyos', 'tuyas',
+  'suyo', 'suya', 'suyos', 'suyas', 'nuestro', 'nuestra', 'nuestros', 'nuestras',
+  'alguno', 'alguna', 'algunos', 'algunas', 'ninguno', 'ninguna', 'varios', 'varias',
+  'demás', 'ambos', 'ambas', 'cada', 'cualquier', 'cualquiera', 'quienquiera', 'dondequiera'
 ]
 
-// Crear Set para búsqueda rápida y eliminar duplicados
-const wordSet = new Set(spanishWords.map(w => w.toLowerCase()))
+// Eliminar duplicados manteniendo el orden (primera aparición = mayor prioridad)
+const uniqueWords = []
+const seen = new Set()
+for (const word of wordsByFrequency) {
+  const lower = word.toLowerCase()
+  if (!seen.has(lower)) {
+    seen.add(lower)
+    uniqueWords.push(word)
+  }
+}
 
-// Convertir a array ordenado
-export const dictionary = Array.from(wordSet).sort()
+// Crear un mapa para búsqueda rápida con índice de frecuencia
+const frequencyMap = new Map()
+uniqueWords.forEach((word, index) => {
+  const normalized = word.toLowerCase()
+  frequencyMap.set(normalized, {
+    word: word,
+    frequency: uniqueWords.length - index // Mayor número = más frecuente
+  })
+})
 
-// Función de búsqueda
+// Función de búsqueda que devuelve resultados ordenados por FRECUENCIA
 export function searchWords(prefix, limit = 5) {
   if (!prefix || prefix.length === 0) return []
   
   const normalizedPrefix = prefix.toLowerCase()
   const results = []
   
-  for (const word of dictionary) {
+  // Buscar todas las coincidencias
+  for (const [word, data] of frequencyMap) {
     if (word.startsWith(normalizedPrefix)) {
-      results.push(word)
-      if (results.length >= limit) break
+      results.push({
+        word: data.word,
+        frequency: data.frequency
+      })
     }
   }
   
-  return results
+  // Ordenar por frecuencia (mayor primero)
+  results.sort((a, b) => b.frequency - a.frequency)
+  
+  // Devolver solo las palabras
+  return results.slice(0, limit).map(r => r.word)
 }
 
-export default dictionary
+// Exportar el array para compatibilidad
+export const dictionary = uniqueWords
+
+export default {
+  dictionary,
+  searchWords,
+  frequencyMap
+}

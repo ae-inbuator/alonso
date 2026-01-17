@@ -6,9 +6,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   
   padding: var(--spacing-sm) var(--spacing-lg);
-  min-width: 100px;
+  min-width: 80px;
+  max-width: 280px;
   height: 56px;
   
   background-color: var(--color-bg-white);
@@ -23,6 +25,10 @@
   transition: all var(--transition-fast);
   -webkit-user-select: none;
   user-select: none;
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chip:hover {
@@ -37,24 +43,53 @@
   color: white;
 }
 
-/* Chip de IA (futuro) */
+/* ============================================
+   Chip de IA - Muestra "+ continuación"
+   ============================================ */
+
 .chipAI {
   border-color: var(--color-ai-indicator);
-  color: var(--color-ai-indicator);
+  background-color: #FAF5FF;
+  min-width: 120px;
+  max-width: 350px;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  gap: 8px;
 }
 
 .chipAI:hover {
   background-color: #EDE9FE;
+  border-color: #7C3AED;
 }
 
 .chipAI:active {
   background-color: var(--color-ai-indicator);
+  border-color: var(--color-ai-indicator);
+}
+
+.chipAI:active .aiPrefix,
+.chipAI:active .addition,
+.chipAI:active .aiIndicator {
   color: white;
 }
 
-/* Indicador de IA */
+/* Prefijo "+" */
+.aiPrefix {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-ai-indicator);
+  opacity: 0.7;
+}
+
+/* La parte que se agrega (destacada) */
+.addition {
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ai-indicator);
+}
+
+/* Indicador de robot */
 .aiIndicator {
-  margin-left: var(--spacing-xs);
-  font-size: 14px;
+  flex-shrink: 0;
+  font-size: 16px;
   opacity: 0.7;
 }

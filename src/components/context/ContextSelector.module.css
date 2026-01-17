@@ -1,0 +1,134 @@
+/* ============================================
+   ContextSelector - Selector de contexto
+   ============================================ */
+
+.container {
+  position: relative;
+}
+
+/* Botón que muestra el contexto actual */
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  
+  background-color: var(--color-primary-light);
+  border: 2px solid transparent;
+  border-radius: 20px;
+  
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.trigger:hover {
+  border-color: var(--color-primary);
+}
+
+.triggerIcon {
+  font-size: 20px;
+}
+
+.triggerArrow {
+  font-size: 12px;
+  transition: transform var(--transition-fast);
+}
+
+.triggerArrowOpen {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: var(--z-dropdown);
+  
+  min-width: 200px;
+  padding: var(--spacing-sm);
+  
+  background-color: var(--color-bg-white);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  
+  animation: slideDown 0.15s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Opción del dropdown */
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  padding: var(--spacing-md);
+  
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  text-align: left;
+  
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.option:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.optionActive {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.optionIcon {
+  font-size: 24px;
+  width: 32px;
+  text-align: center;
+}
+
+.optionInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.optionName {
+  font-weight: var(--font-weight-medium);
+}
+
+.optionCount {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Overlay para cerrar al hacer clic afuera */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: calc(var(--z-dropdown) - 1);
+}

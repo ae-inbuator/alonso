@@ -11,15 +11,33 @@ import { useState, useMemo } from 'react'
 import PhraseButton from './PhraseButton'
 import styles from './PhrasesPanel.module.css'
 
-// Categorías con iconos
-const CATEGORIES = [
-  { id: 'todas', name: 'Todas', icon: '📋' },
-  { id: 'saludos', name: 'Saludos', icon: '👋' },
-  { id: 'social', name: 'Social', icon: '💬' },
-  { id: 'necesidades', name: 'Necesidades', icon: '🙋' },
-  { id: 'opiniones', name: 'Opiniones', icon: '💭' },
-  { id: 'preguntas', name: 'Preguntas', icon: '❓' },
-]
+// Mapeo de categorías a iconos
+const CATEGORY_ICONS = {
+  todas: '📋',
+  saludos: '👋',
+  social: '💬',
+  necesidades: '🙋',
+  opiniones: '💭',
+  preguntas: '❓',
+  restaurante: '🍽️',
+  escuela: '🎓',
+  terapia: '💜',
+  general: '📝'
+}
+
+// Nombres amigables para las categorías
+const CATEGORY_NAMES = {
+  todas: 'Todas',
+  saludos: 'Saludos',
+  social: 'Social',
+  necesidades: 'Necesidades',
+  opiniones: 'Opiniones',
+  preguntas: 'Preguntas',
+  restaurante: 'Restaurante',
+  escuela: 'Escuela',
+  terapia: 'Terapia',
+  general: 'General'
+}
 
 export default function PhrasesPanel({ 
   phrases = [], 
@@ -28,6 +46,23 @@ export default function PhrasesPanel({
 }) {
   const [activeCategory, setActiveCategory] = useState('todas')
   
+  // Detectar categorías disponibles basadas en las frases
+  const availableCategories = useMemo(() => {
+    const categories = new Set(['todas'])
+    phrases.forEach(phrase => {
+      if (phrase.category) {
+        categories.add(phrase.category)
+      }
+    })
+    
+    // Convertir a array con info
+    return Array.from(categories).map(catId => ({
+      id: catId,
+      name: CATEGORY_NAMES[catId] || catId.charAt(0).toUpperCase() + catId.slice(1),
+      icon: CATEGORY_ICONS[catId] || '📝'
+    }))
+  }, [phrases])
+  
   // Filtrar frases por categoría
   const filteredPhrases = useMemo(() => {
     if (activeCategory === 'todas') {
@@ -35,14 +70,6 @@ export default function PhrasesPanel({
     }
     return phrases.filter(p => p.category === activeCategory)
   }, [phrases, activeCategory])
-  
-  // Obtener categorías que tienen frases
-  const availableCategories = useMemo(() => {
-    const categoriesWithPhrases = new Set(phrases.map(p => p.category))
-    return CATEGORIES.filter(
-      cat => cat.id === 'todas' || categoriesWithPhrases.has(cat.id)
-    )
-  }, [phrases])
   
   if (loading) {
     return (
