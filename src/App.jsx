@@ -1,16 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { supabase } from './services/supabase'
+import { getPredictions, applyPrediction } from './services/prediction'
+import { speak } from './services/tts'
 import { Keyboard } from './components/keyboard'
 import { MessageArea, SpeakButton } from './components/message'
+import { PredictionBar } from './components/predictions'
+import { PhrasesPanel } from './components/phrases'
 import styles from './App.module.css'
 
 function App() {
   const [profile, setProfile] = useState(null)
+  const [phrases, setPhrases] = useState([])
   const [loading, setLoading] = useState(true)
+  const [phrasesLoading, setPhrasesLoading] = useState(true)
   const [error, setError] = useState(null)
   const [currentText, setCurrentText] = useState('')
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [ttsError, setTtsError] = useState(null)
 
+  // Cargar perfil
   useEffect(() => {
     async function loadProfile() {
       try {
@@ -31,9 +39,37 @@ function App() {
     loadProfile()
   }, [])
 
+  // Cargar frases
+  useEffect(() => {
+    async function loadPhrases() {
+      try {
+        const { data, error } = await supabase
+          .from('phrase')
+          .select('*')
+          .order('sort_order', { ascending: true })
+          .order('use_count', { ascending: false })
+
+        if (error) throw error
+        setPhrases(data || [])
+      } catch (err) {
+        console.error('Error cargando frases:', err)
+      } finally {
+        setPhrasesLoading(false)
+      }
+    }
+
+    loadPhrases()
+  }, [])
+
+  // Calcular predicciones basadas en el texto actual
+  const predictions = useMemo(() => {
+    return getPredictions(currentText, [], 3)
+  }, [currentText])
+
   // Handlers del teclado
   const handleKeyPress = (char) => {
     setCurrentText(prev => prev + char)
+    setTtsError(null)
   }
 
   const handleBackspace = () => {
@@ -46,31 +82,64 @@ function App() {
 
   const handleClear = () => {
     setCurrentText('')
+    setTtsError(null)
   }
 
-  // Handler del botón hablar (por ahora simulado)
-  const handleSpeak = () => {
-    if (!currentText.trim()) return
+  // Handler de predicción seleccionada
+  const handlePredictionSelect = (word) => {
+    setCurrentText(prev => applyPrediction(prev, word))
+  }
+
+  // Handler de frase seleccionada
+  const handlePhraseSelect = (phrase) => {
+    // Insertar la frase en el texto actual
+    setCurrentText(prev => {
+      // Si hay texto, agregar espacio antes
+      if (prev.trim()) {
+        return prev.trim() + ' ' + phrase.text
+      }
+      return phrase.text
+    })
+    setTtsError(null)
+  }
+
+  // Handler del botón hablar
+  const handleSpeak = async () => {
+    if (!currentText.trim() || isSpeaking) return
     
     setIsSpeaking(true)
+    setTtsError(null)
     
-    // TODO: Aquí irá la llamada a ElevenLabs
-    // Por ahora simulamos con el TTS del navegador
-    const utterance = new SpeechSynthesisUtterance(currentText)
-    utterance.lang = 'es-MX'
-    utterance.rate = 0.9
-    
-    utterance.onend = () => {
+    try {
+      await speak(currentText, {
+        onEnd: () => {
+          setIsSpeaking(false)
+        },
+        onError: (error) => {
+          console.error('Error TTS:', error)
+          setIsSpeaking(false)
+          setTtsError('Error al reproducir audio')
+        }
+      })
+    } catch (error) {
+      console.error('Error al hablar:', error)
       setIsSpeaking(false)
-      // Opcional: limpiar después de hablar
-      // setCurrentText('')
+      
+      // Fallback al TTS del navegador
+      console.log('Usando TTS del navegador como fallback...')
+      try {
+        const utterance = new SpeechSynthesisUtterance(currentText)
+        utterance.lang = 'es-MX'
+        utterance.rate = 0.9
+        utterance.onend = () => setIsSpeaking(false)
+        utterance.onerror = () => setIsSpeaking(false)
+        window.speechSynthesis.speak(utterance)
+        setIsSpeaking(true)
+        setTtsError('Usando voz del navegador (ElevenLabs no disponible)')
+      } catch (fallbackError) {
+        setTtsError('Error: No se pudo reproducir audio')
+      }
     }
-    
-    utterance.onerror = () => {
-      setIsSpeaking(false)
-    }
-    
-    window.speechSynthesis.speak(utterance)
   }
 
   // Estados de carga y error
@@ -119,6 +188,28 @@ function App() {
               isSpeaking={isSpeaking}
             />
           </div>
+          {ttsError && (
+            <div className={styles.ttsError}>
+              ⚠️ {ttsError}
+            </div>
+          )}
+        </section>
+
+        {/* Panel de frases rápidas */}
+        <section className={styles.phrasesSection}>
+          <PhrasesPanel
+            phrases={phrases}
+            onPhraseSelect={handlePhraseSelect}
+            loading={phrasesLoading}
+          />
+        </section>
+
+        {/* Barra de predicciones */}
+        <section className={styles.predictionsSection}>
+          <PredictionBar
+            predictions={predictions}
+            onSelect={handlePredictionSelect}
+          />
         </section>
 
         {/* Teclado */}
@@ -131,9 +222,9 @@ function App() {
         </section>
       </main>
 
-      {/* Footer (debug info - temporal) */}
+      {/* Footer */}
       <footer className={styles.footer}>
-        ✅ {profile?.name} | Teclado: {profile?.keyboard_layout} | Caracteres: {currentText.length}
+        ✅ {profile?.name} | 🔊 ElevenLabs | 📝 {phrases.length} frases
       </footer>
     </div>
   )

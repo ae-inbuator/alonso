@@ -99,6 +99,33 @@
   align-items: stretch;
 }
 
+.ttsError {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: #FEF3C7;
+  border: 1px solid #F59E0B;
+  border-radius: 8px;
+  color: #92400E;
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+/* Área de frases rápidas */
+.phrasesSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Área de predicciones */
+.predictionsSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 /* Área inferior: teclado */
 .keyboardSection {
   width: 100%;
