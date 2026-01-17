@@ -1,0 +1,39 @@
+/* ============================================
+   Keyboard - Teclado ABC completo
+   ============================================ */
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--key-gap);
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* Cada fila de teclas */
+.row {
+  display: flex;
+  justify-content: center;
+  gap: var(--key-gap);
+}
+
+/* Fila inferior con espacio y borrar */
+.rowBottom {
+  display: flex;
+  justify-content: center;
+  gap: var(--key-gap);
+  margin-top: var(--spacing-xs);
+}
+
+/* Fila de puntuación */
+.rowPunctuation {
+  display: flex;
+  justify-content: center;
+  gap: var(--key-gap);
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 2px solid var(--color-border);
+}

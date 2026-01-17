@@ -1,0 +1,101 @@
+/* ============================================
+   MessageArea - Área de texto del mensaje
+   ============================================ */
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: stretch;
+}
+
+.messageBox {
+  flex: 1;
+  min-height: 100px;
+  padding: var(--spacing-lg);
+  
+  background-color: var(--color-bg-white);
+  border: 3px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  line-height: 1.4;
+  
+  /* Para que el texto largo haga wrap */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.messageBox:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-light);
+}
+
+/* Placeholder cuando no hay texto */
+.placeholder {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Cursor parpadeante */
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.2em;
+  background-color: var(--color-primary);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 45% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Contenedor de botones a la derecha */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Botón de limpiar */
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  width: 50px;
+  height: 50px;
+  
+  background-color: var(--color-bg-white);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  
+  color: var(--color-text-secondary);
+  font-size: 20px;
+  
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.clearButton:hover {
+  background-color: #FEE2E2;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.clearButton:active {
+  transform: scale(0.95);
+}
+
+/* Ocultar botón limpiar si no hay texto */
+.clearButton.hidden {
+  opacity: 0.3;
+  pointer-events: none;
+}

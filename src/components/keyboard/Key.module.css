@@ -1,0 +1,103 @@
+/* ============================================
+   Key - Botón individual del teclado
+   ============================================ */
+
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Tamaño grande para accesibilidad */
+  min-width: var(--key-width);
+  height: var(--key-height);
+  padding: var(--spacing-sm) var(--spacing-md);
+  
+  /* Estilo visual */
+  background-color: var(--color-bg-white);
+  border: 2px solid var(--color-border);
+  border-radius: var(--key-radius);
+  box-shadow: var(--shadow-key);
+  
+  /* Texto */
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  text-transform: uppercase;
+  
+  /* Interacción */
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover (para mouse) */
+.key:hover {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-primary);
+}
+
+/* Active/Pressed */
+.key:active {
+  transform: translateY(2px);
+  box-shadow: var(--shadow-key-pressed);
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+/* ============================================
+   Variantes de teclas
+   ============================================ */
+
+/* Tecla de espacio - más ancha */
+.space {
+  min-width: 200px;
+  flex-grow: 1;
+  max-width: 300px;
+}
+
+/* Tecla de borrar */
+.backspace {
+  min-width: 100px;
+  background-color: #FEE2E2;
+  border-color: #FECACA;
+  color: var(--color-danger);
+}
+
+.backspace:hover {
+  background-color: #FECACA;
+  border-color: var(--color-danger);
+}
+
+.backspace:active {
+  background-color: #FCA5A5;
+  border-color: var(--color-danger);
+}
+
+/* Teclas de puntuación */
+.punctuation {
+  min-width: 60px;
+  font-size: var(--font-size-xl);
+}
+
+/* Tecla especial (Enter, símbolos) */
+.special {
+  min-width: 80px;
+  background-color: var(--color-bg-secondary);
+  font-size: var(--font-size-md);
+}
+
+.special:hover {
+  background-color: var(--color-border);
+}
+
+/* ============================================
+   Iconos dentro de teclas
+   ============================================ */
+
+.icon {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.5;
+}
