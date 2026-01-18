@@ -60,6 +60,7 @@
   justify-content: center;
   width: 48px;
   height: 48px;
+  border: none;
   border-radius: 12px;
   background-color: var(--color-bg-secondary);
   font-size: 24px;
@@ -69,6 +70,16 @@
 
 .iconButton:hover {
   background-color: var(--color-border);
+}
+
+.iconButton:active {
+  transform: scale(0.95);
+}
+
+/* Botón de sonido cuando está en mute */
+.iconButtonMuted {
+  opacity: 0.6;
+  background-color: var(--color-bg-secondary);
 }
 
 /* ============================================

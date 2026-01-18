@@ -4,6 +4,7 @@ import { getPredictions, applyPrediction } from './services/prediction'
 import { speak } from './services/tts'
 import { getAISuggestions, cancelPendingAIRequest } from './services/ai'
 import { saveMessage } from './services/history'
+import { speakKey, speakBackspace, getIsMuted, setMuted } from './services/keySound'
 import { Keyboard } from './components/keyboard'
 import { MessageArea, SpeakButton } from './components/message'
 import { PredictionBar } from './components/predictions'
@@ -33,6 +34,9 @@ function App() {
   
   // Estado para el panel de historial
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+  
+  // Estado para sonido de teclas (mute/unmute)
+  const [isKeySoundMuted, setIsKeySoundMuted] = useState(getIsMuted())
   
   // Refs para debounce
   const aiDebounceTimer = useRef(null)
@@ -181,17 +185,27 @@ function App() {
     setActiveContext(context)
   }
 
+  // Toggle sonido de teclas
+  const handleToggleKeySound = () => {
+    const newMuted = !isKeySoundMuted
+    setIsKeySoundMuted(newMuted)
+    setMuted(newMuted)
+  }
+
   // Handlers del teclado
   const handleKeyPress = (char) => {
+    speakKey(char)  // Decir la letra
     setCurrentText(prev => prev + char)
     setTtsError(null)
   }
 
   const handleBackspace = () => {
+    speakBackspace()  // Decir "borrar"
     setCurrentText(prev => prev.slice(0, -1))
   }
 
   const handleSpace = () => {
+    speakKey(' ')  // Decir "espacio"
     setCurrentText(prev => prev + ' ')
   }
 
@@ -337,6 +351,13 @@ function App() {
         </div>
         
         <div className={styles.headerRight}>
+          <button 
+            className={`${styles.iconButton} ${isKeySoundMuted ? styles.iconButtonMuted : ''}`}
+            title={isKeySoundMuted ? "Activar sonido de teclas" : "Silenciar sonido de teclas"}
+            onClick={handleToggleKeySound}
+          >
+            {isKeySoundMuted ? '🔇' : '🔊'}
+          </button>
           <button 
             className={styles.iconButton} 
             title="Historial"
