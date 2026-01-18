@@ -1,0 +1,241 @@
+/* ============================================
+   HistoryPanel - Panel de historial de mensajes
+   ============================================ */
+
+/* Overlay oscuro detrás del panel */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Panel principal */
+.panel {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* Header del panel */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.closeButton {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background: var(--color-border);
+}
+
+/* Contenido scrolleable */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Estados */
+.loading,
+.error,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty p {
+  margin: 4px 0;
+  font-size: 18px;
+}
+
+.emptyHint {
+  font-size: 14px !important;
+  opacity: 0.7;
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+/* Lista de mensajes */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Item de mensaje */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-bg-secondary);
+  border-radius: 16px;
+  transition: background-color 0.2s;
+}
+
+.item:hover {
+  background: var(--color-primary-light);
+}
+
+/* Contenido del mensaje */
+.messageContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.text {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0 0 8px 0;
+  word-wrap: break-word;
+}
+
+/* Metadata */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.time {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.aiTag {
+  font-size: 14px;
+}
+
+.useCount {
+  font-size: 12px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.context {
+  font-size: 14px;
+}
+
+/* Botones de acción */
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.repeatButton,
+.insertButton {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.repeatButton {
+  background: var(--color-speak-button);
+  color: white;
+}
+
+.repeatButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.repeatButton:active {
+  transform: scale(0.95);
+}
+
+.insertButton {
+  background: var(--color-primary);
+  color: white;
+}
+
+.insertButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.insertButton:active {
+  transform: scale(0.95);
+}
+
+/* Responsive para tablet */
+@media (min-width: 768px) {
+  .panel {
+    max-width: 700px;
+  }
+  
+  .text {
+    font-size: 20px;
+  }
+  
+  .repeatButton,
+  .insertButton {
+    width: 64px;
+    height: 64px;
+    font-size: 28px;
+  }
+}

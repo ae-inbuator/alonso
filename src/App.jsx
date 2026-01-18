@@ -9,6 +9,7 @@ import { MessageArea, SpeakButton } from './components/message'
 import { PredictionBar } from './components/predictions'
 import { PhrasesPanel } from './components/phrases'
 import { ContextSelector } from './components/context'
+import { HistoryPanel } from './components/history'
 import styles from './App.module.css'
 
 function App() {
@@ -23,12 +24,15 @@ function App() {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [ttsError, setTtsError] = useState(null)
   
-  // Estados para IA - ahora son objetos {full, addition}
+  // Estados para IA
   const [aiPredictions, setAiPredictions] = useState([])
   const [aiLoading, setAiLoading] = useState(false)
   
   // Rastrear si usó sugerencia de IA en este mensaje
   const [usedAISuggestion, setUsedAISuggestion] = useState(false)
+  
+  // Estado para el panel de historial
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   
   // Refs para debounce
   const aiDebounceTimer = useRef(null)
@@ -95,7 +99,6 @@ function App() {
 
   // Llamar a IA cuando el texto cambia (con debounce)
   useEffect(() => {
-    // Cancelar timers anteriores
     if (aiDebounceTimer.current) {
       clearTimeout(aiDebounceTimer.current)
     }
@@ -103,22 +106,18 @@ function App() {
       clearTimeout(loadingTimer.current)
     }
 
-    // No llamar si el texto es muy corto
     if (!currentText || currentText.trim().length < 3) {
       setAiPredictions([])
       setAiLoading(false)
       return
     }
 
-    // Delay corto - 700ms después de dejar de escribir
     const DEBOUNCE_DELAY = 700
 
-    // Mostrar loading después de 300ms
     loadingTimer.current = setTimeout(() => {
       setAiLoading(true)
     }, 300)
 
-    // Llamar a la IA después del delay
     aiDebounceTimer.current = setTimeout(async () => {
       try {
         console.log('Llamando a IA con:', currentText)
@@ -138,7 +137,6 @@ function App() {
       }
     }, DEBOUNCE_DELAY)
 
-    // Cleanup
     return () => {
       if (loadingTimer.current) {
         clearTimeout(loadingTimer.current)
@@ -202,7 +200,7 @@ function App() {
     setTtsError(null)
     setAiPredictions([])
     setAiLoading(false)
-    setUsedAISuggestion(false) // Reset al limpiar
+    setUsedAISuggestion(false)
     cancelPendingAIRequest()
   }
 
@@ -215,7 +213,7 @@ function App() {
   const handleAIPredictionSelect = (fullText) => {
     setCurrentText(fullText)
     setAiPredictions([])
-    setUsedAISuggestion(true) // Marcar que usó IA
+    setUsedAISuggestion(true)
   }
 
   // Handler de frase rápida seleccionada
@@ -230,44 +228,37 @@ function App() {
     setAiPredictions([])
   }
 
-  // Handler del botón hablar
-  const handleSpeak = async () => {
-    if (!currentText.trim() || isSpeaking) return
-    
-    const textToSpeak = currentText.trim()
+  // Función para hablar texto (usada por handleSpeak y por historial)
+  const speakText = async (textToSpeak, saveToHistory = true) => {
+    if (!textToSpeak.trim() || isSpeaking) return
     
     setIsSpeaking(true)
     setTtsError(null)
     
-    // Guardar en historial (sin esperar, en paralelo)
-    console.log('🔍 DEBUG - Profile:', profile)
-    console.log('🔍 DEBUG - Profile ID:', profile?.id)
-    console.log('🔍 DEBUG - Texto a guardar:', textToSpeak)
-    
-    if (profile?.id) {
-      console.log('✅ Intentando guardar mensaje...')
+    // Guardar en historial
+    if (saveToHistory && profile?.id) {
+      console.log('✅ Guardando mensaje...')
       saveMessage({
         text: textToSpeak,
         profileId: profile.id,
         contextId: activeContext?.id || null,
         wasAIAssisted: usedAISuggestion
       }).then(() => {
-        console.log('✅ Mensaje guardado exitosamente!')
+        console.log('✅ Mensaje guardado!')
       }).catch(err => {
-        console.error('❌ Error guardando en historial:', err)
+        console.error('❌ Error guardando:', err)
       })
-    } else {
-      console.error('❌ No hay profile.id, no se puede guardar')
     }
     
     try {
       await speak(textToSpeak, {
         onEnd: () => {
           setIsSpeaking(false)
-          // Limpiar después de hablar exitosamente
-          setCurrentText('')
-          setUsedAISuggestion(false)
-          setAiPredictions([])
+          if (saveToHistory) {
+            setCurrentText('')
+            setUsedAISuggestion(false)
+            setAiPredictions([])
+          }
         },
         onError: (error) => {
           console.error('Error TTS:', error)
@@ -286,10 +277,11 @@ function App() {
         utterance.rate = 0.9
         utterance.onend = () => {
           setIsSpeaking(false)
-          // Limpiar después de hablar
-          setCurrentText('')
-          setUsedAISuggestion(false)
-          setAiPredictions([])
+          if (saveToHistory) {
+            setCurrentText('')
+            setUsedAISuggestion(false)
+            setAiPredictions([])
+          }
         }
         utterance.onerror = () => setIsSpeaking(false)
         window.speechSynthesis.speak(utterance)
@@ -299,6 +291,26 @@ function App() {
         setTtsError('Error: No se pudo reproducir audio')
       }
     }
+  }
+
+  // Handler del botón hablar
+  const handleSpeak = async () => {
+    await speakText(currentText.trim(), true)
+  }
+
+  // Handler para repetir desde historial (NO guarda de nuevo)
+  const handleRepeatFromHistory = async (text) => {
+    await speakText(text, false)
+  }
+
+  // Handler para insertar texto desde historial
+  const handleInsertFromHistory = (text) => {
+    setCurrentText(prev => {
+      if (prev.trim()) {
+        return prev.trim() + ' ' + text
+      }
+      return text
+    })
   }
 
   // Estados de carga y error
@@ -325,7 +337,11 @@ function App() {
         </div>
         
         <div className={styles.headerRight}>
-          <button className={styles.iconButton} title="Historial">
+          <button 
+            className={styles.iconButton} 
+            title="Historial"
+            onClick={() => setIsHistoryOpen(true)}
+          >
             📜
           </button>
           <button className={styles.iconButton} title="Configuración">
@@ -391,6 +407,15 @@ function App() {
       <footer className={styles.footer}>
         ✅ {profile?.name} | 📍 {activeContext?.name || 'Sin contexto'} | 📝 {filteredPhrases.length} frases | 🤖 {aiLoading ? 'Pensando...' : aiPredictions.length > 0 ? 'Sugerencias listas' : 'Lista'}
       </footer>
+
+      {/* Panel de Historial */}
+      <HistoryPanel
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        profileId={profile?.id}
+        onRepeat={handleRepeatFromHistory}
+        onInsert={handleInsertFromHistory}
+      />
     </div>
   )
 }
