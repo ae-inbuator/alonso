@@ -46,14 +46,13 @@ export default function PredictionBar({
         </div>
       )}
       
-      {/* Predicciones de IA (continuaciones) */}
+      {/* Predicciones de IA (texto completo) */}
       {!loading && aiPredictions.map((suggestion, index) => (
         <PredictionChip
-          key={`ai-${index}-${suggestion.addition}`}
-          word={suggestion.addition}
+          key={`ai-${index}-${suggestion.full}`}
+          word={suggestion.full}
           onClick={() => onAISelect && onAISelect(suggestion.full)}
           isAI={true}
-          addition={suggestion.addition}
           fullText={suggestion.full}
         />
       ))}

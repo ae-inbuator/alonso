@@ -5,7 +5,6 @@
  * - word: string - La palabra/frase sugerida
  * - onClick: function - Handler al seleccionar
  * - isAI: boolean - Si viene de IA
- * - addition: string - (solo IA) La parte que se va a agregar
  * - fullText: string - (solo IA) El texto completo resultante
  */
 
@@ -15,7 +14,6 @@ export default function PredictionChip({
   word, 
   onClick, 
   isAI = false,
-  addition = null,
   fullText = null 
 }) {
   
@@ -27,18 +25,16 @@ export default function PredictionChip({
     }
   }
   
-  // Para sugerencias de IA, mostrar "... + adición"
-  if (isAI && addition) {
+  // Para sugerencias de IA, mostrar el texto COMPLETO
+  if (isAI && fullText) {
     return (
       <button
         type="button"
         className={`${styles.chip} ${styles.chipAI}`}
         onClick={handleClick}
-        aria-label={`Agregar: ${addition}`}
-        title={`Resultado: ${fullText}`}
+        aria-label={`Seleccionar: ${fullText}`}
       >
-        <span className={styles.aiPrefix}>+</span>
-        <span className={styles.addition}>{addition}</span>
+        <span className={styles.fullText}>{fullText}</span>
         <span className={styles.aiIndicator}>🤖</span>
       </button>
     )
