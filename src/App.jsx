@@ -285,14 +285,6 @@ function App() {
     <div className={styles.app}>
       {/* Header mínimo */}
       <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <ContextSelector
-            contexts={contexts}
-            activeContext={activeContext}
-            onSelect={handleContextChange}
-          />
-        </div>
-        
         <div className={styles.messageWrapper}>
           <MessageArea
             text={currentText}
@@ -302,6 +294,11 @@ function App() {
         </div>
         
         <div className={styles.headerRight}>
+          <ContextSelector
+            contexts={contexts}
+            activeContext={activeContext}
+            onSelect={handleContextChange}
+          />
           <button 
             className={styles.smallIconButton} 
             title="Historial"

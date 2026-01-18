@@ -1,17 +1,16 @@
 /* ============================================
-   PredictionBar - Barra de predicciones
+   PredictionBar - Barra de predicciones compacta
    ============================================ */
 
 .bar {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--spacing-md);
+  gap: 12px;
   
   width: 100%;
-  max-width: 100%;
-  min-height: 70px;
-  padding: var(--spacing-sm) var(--spacing-lg);
+  min-height: 50px;
+  padding: 6px 12px;
   
   background-color: var(--color-bg-secondary);
   border-radius: 12px;
@@ -20,61 +19,48 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Ocultar scrollbar pero permitir scroll */
+/* Ocultar scrollbar */
 .bar::-webkit-scrollbar {
-  height: 4px;
+  height: 0;
 }
 
-.bar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.bar::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
-
-/* Separador entre palabras y sugerencias IA */
+/* Separador */
 .separator {
   color: var(--color-border);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 300;
-  padding: 0 var(--spacing-xs);
 }
 
-/* Estado vacío */
+/* Estado vacío - más compacto */
 .empty {
   color: var(--color-text-secondary);
-  font-size: var(--font-size-md);
+  font-size: 16px;
   font-style: italic;
   margin: 0 auto;
+  padding: 4px 0;
 }
 
 /* Estado cargando */
 .loading {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: 8px;
   color: var(--color-ai-indicator);
-  font-size: var(--font-size-md);
-  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 16px;
+  padding: 6px 12px;
   background-color: #FAF5FF;
-  border-radius: 20px;
+  border-radius: 16px;
   animation: pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 .spinner {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border: 2px solid #E9D5FF;
   border-top-color: var(--color-ai-indicator);
   border-radius: 50%;

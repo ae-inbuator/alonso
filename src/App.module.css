@@ -1,5 +1,5 @@
 /* ============================================
-   App - Layout SIMPLIFICADO para máximo tamaño
+   App - Layout MÁXIMO espacio para teclado
    ============================================ */
 
 .app {
@@ -11,18 +11,14 @@
   overflow: hidden;
 }
 
-/* Header mínimo */
+/* Header compacto */
 .header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 16px;
+  padding: 8px 12px;
   background-color: var(--color-bg-white);
   border-bottom: 1px solid var(--color-border);
-  flex-shrink: 0;
-}
-
-.headerLeft {
   flex-shrink: 0;
 }
 
@@ -33,6 +29,7 @@
 
 .headerRight {
   display: flex;
+  align-items: center;
   gap: 8px;
   flex-shrink: 0;
 }
@@ -59,13 +56,13 @@
   transform: scale(0.95);
 }
 
-/* Main - ocupa todo el espacio restante */
+/* Main - mínimo padding */
 .main {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 8px;
-  gap: 8px;
+  padding: 6px;
+  gap: 6px;
   overflow: hidden;
 }
 
@@ -75,7 +72,7 @@
 
 .actionsRow {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -83,10 +80,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 70px;
+  height: 65px;
   border: none;
   border-radius: 12px;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.1s ease;
@@ -139,10 +136,10 @@
 
 /* MUTE - Gris */
 .muteButton {
-  width: 80px;
+  width: 70px;
   flex-shrink: 0;
   background-color: #E5E7EB;
-  font-size: 32px;
+  font-size: 28px;
 }
 
 .muteButton:hover {
@@ -162,7 +159,7 @@
 }
 
 /* ============================================
-   Teclado - ocupa máximo espacio
+   Teclado - ocupa TODO el espacio restante
    ============================================ */
 
 .keyboardSection {

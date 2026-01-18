@@ -1,14 +1,14 @@
 /* ============================================
-   Keyboard - Teclado GRANDE para AAC
+   Keyboard - Teclado GRANDE sin márgenes extra
    ============================================ */
 
 .keyboard {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 10px;
+  gap: 6px;
+  padding: 6px;
   background-color: var(--color-bg-secondary);
-  border-radius: 16px;
+  border-radius: 12px;
   width: 100%;
   height: 100%;
 }
@@ -16,6 +16,6 @@
 .row {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
 }
