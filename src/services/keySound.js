@@ -35,7 +35,7 @@ export function speakKey(text) {
     'ñ': 'eñe',
   }
   
-  const toSpeak = specialChars[text] || text
+  const toSpeak = specialChars[text] || text.toLowerCase()
   
   const utterance = new SpeechSynthesisUtterance(toSpeak)
   utterance.lang = 'es-MX'
