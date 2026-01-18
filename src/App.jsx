@@ -3,6 +3,7 @@ import { supabase } from './services/supabase'
 import { getPredictions, applyPrediction } from './services/prediction'
 import { speak } from './services/tts'
 import { getAISuggestions, cancelPendingAIRequest } from './services/ai'
+import { saveMessage } from './services/history'
 import { Keyboard } from './components/keyboard'
 import { MessageArea, SpeakButton } from './components/message'
 import { PredictionBar } from './components/predictions'
@@ -25,6 +26,9 @@ function App() {
   // Estados para IA - ahora son objetos {full, addition}
   const [aiPredictions, setAiPredictions] = useState([])
   const [aiLoading, setAiLoading] = useState(false)
+  
+  // Rastrear si usó sugerencia de IA en este mensaje
+  const [usedAISuggestion, setUsedAISuggestion] = useState(false)
   
   // Refs para debounce
   const aiDebounceTimer = useRef(null)
@@ -198,6 +202,7 @@ function App() {
     setTtsError(null)
     setAiPredictions([])
     setAiLoading(false)
+    setUsedAISuggestion(false) // Reset al limpiar
     cancelPendingAIRequest()
   }
 
@@ -208,9 +213,9 @@ function App() {
 
   // Handler de predicción IA seleccionada (texto completo)
   const handleAIPredictionSelect = (fullText) => {
-    // Ahora simplemente usamos el texto completo que viene de la IA
     setCurrentText(fullText)
     setAiPredictions([])
+    setUsedAISuggestion(true) // Marcar que usó IA
   }
 
   // Handler de frase rápida seleccionada
@@ -229,13 +234,40 @@ function App() {
   const handleSpeak = async () => {
     if (!currentText.trim() || isSpeaking) return
     
+    const textToSpeak = currentText.trim()
+    
     setIsSpeaking(true)
     setTtsError(null)
     
+    // Guardar en historial (sin esperar, en paralelo)
+    console.log('🔍 DEBUG - Profile:', profile)
+    console.log('🔍 DEBUG - Profile ID:', profile?.id)
+    console.log('🔍 DEBUG - Texto a guardar:', textToSpeak)
+    
+    if (profile?.id) {
+      console.log('✅ Intentando guardar mensaje...')
+      saveMessage({
+        text: textToSpeak,
+        profileId: profile.id,
+        contextId: activeContext?.id || null,
+        wasAIAssisted: usedAISuggestion
+      }).then(() => {
+        console.log('✅ Mensaje guardado exitosamente!')
+      }).catch(err => {
+        console.error('❌ Error guardando en historial:', err)
+      })
+    } else {
+      console.error('❌ No hay profile.id, no se puede guardar')
+    }
+    
     try {
-      await speak(currentText, {
+      await speak(textToSpeak, {
         onEnd: () => {
           setIsSpeaking(false)
+          // Limpiar después de hablar exitosamente
+          setCurrentText('')
+          setUsedAISuggestion(false)
+          setAiPredictions([])
         },
         onError: (error) => {
           console.error('Error TTS:', error)
@@ -249,10 +281,16 @@ function App() {
       
       // Fallback al TTS del navegador
       try {
-        const utterance = new SpeechSynthesisUtterance(currentText)
+        const utterance = new SpeechSynthesisUtterance(textToSpeak)
         utterance.lang = 'es-MX'
         utterance.rate = 0.9
-        utterance.onend = () => setIsSpeaking(false)
+        utterance.onend = () => {
+          setIsSpeaking(false)
+          // Limpiar después de hablar
+          setCurrentText('')
+          setUsedAISuggestion(false)
+          setAiPredictions([])
+        }
         utterance.onerror = () => setIsSpeaking(false)
         window.speechSynthesis.speak(utterance)
         setIsSpeaking(true)
