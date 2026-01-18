@@ -1,27 +1,20 @@
 /**
- * Keyboard - Teclado ABC completo para AAC
- * 
- * Props:
- * - onKeyPress: function(char) - Cuando se presiona una letra/símbolo
- * - onBackspace: function() - Cuando se presiona borrar
- * - onSpace: function() - Cuando se presiona espacio
+ * Keyboard - Teclado ABC GRANDE (7 letras por fila)
  */
 
 import Key from './Key'
 import styles from './Keyboard.module.css'
 
-// Layout del teclado ABC en español
+// Layout: 7 letras por fila para teclas más grandes
 const ROWS = [
-  ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-  ['K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S'],
-  ['T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+  ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+  ['H', 'I', 'J', 'K', 'L', 'M', 'N'],
+  ['Ñ', 'O', 'P', 'Q', 'R', 'S', 'T'],
+  ['U', 'V', 'W', 'X', 'Y', 'Z']
 ]
-
-const PUNCTUATION = ['.', ',', '?', '!', '¿', '¡']
 
 export default function Keyboard({ onKeyPress, onBackspace, onSpace }) {
   
-  // Handler general que distribuye según el tipo
   const handleClick = (value, type) => {
     switch (type) {
       case 'backspace':
@@ -38,8 +31,8 @@ export default function Keyboard({ onKeyPress, onBackspace, onSpace }) {
   
   return (
     <div className={styles.keyboard}>
-      {/* Filas de letras A-S */}
-      {ROWS.slice(0, 2).map((row, rowIndex) => (
+      {/* Filas A-G, H-N, Ñ-T */}
+      {ROWS.slice(0, 3).map((row, rowIndex) => (
         <div key={rowIndex} className={styles.row}>
           {row.map(letter => (
             <Key
@@ -51,9 +44,9 @@ export default function Keyboard({ onKeyPress, onBackspace, onSpace }) {
         </div>
       ))}
       
-      {/* Fila T-Z con Borrar */}
+      {/* Fila U-Z + Borrar */}
       <div className={styles.row}>
-        {ROWS[2].map(letter => (
+        {ROWS[3].map(letter => (
           <Key
             key={letter}
             value={letter}
@@ -68,26 +61,14 @@ export default function Keyboard({ onKeyPress, onBackspace, onSpace }) {
         />
       </div>
       
-      {/* Fila de espacio */}
-      <div className={styles.rowBottom}>
+      {/* ESPACIO */}
+      <div className={styles.row}>
         <Key
           value=" "
           label="ESPACIO"
           type="space"
           onClick={handleClick}
         />
-      </div>
-      
-      {/* Fila de puntuación */}
-      <div className={styles.rowPunctuation}>
-        {PUNCTUATION.map(punct => (
-          <Key
-            key={punct}
-            value={punct}
-            type="punctuation"
-            onClick={handleClick}
-          />
-        ))}
       </div>
     </div>
   )
